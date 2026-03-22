@@ -29,13 +29,13 @@
 git clone [https://github.com/your-username/base_wallet_frontend.git](https://github.com/your-username/base_wallet_frontend.git)
 cd base_wallet_frontend
 
-2. Install Dependencies
-Ensure you have Node.js installed, then run:
+### 2. Install Dependencies
+'''Ensure you have Node.js installed, then run:
 
 Bash
 npm install
-3. Environment Variables
-Create a .env.local file in the root directory and add your connection strings:
+### 3. Environment Variables
+'''Create a .env.local file in the root directory and add your connection strings:
 
 Code snippet
 MONGODB_URI=your_mongodb_connection_string
@@ -74,4 +74,3 @@ Developed with ❤️ by Hassan Ahmed Khan
 ### 💡 How to make it look even better on GitHub:
 GitHub renders Markdown automatically. Once you upload this, the headings will be large, the code blocks will be highlighted, and the bullet points will be clean.
 
-**Would you like me to help you write a professional "Commit Message" for when you push all these new files and designs to GitHub?**
