@@ -168,11 +168,21 @@ export default function Blocks({ data }) {
 
 export async function getServerSideProps(context) {
   try {
-    const res = await fetch("http://localhost:3000/api/fetchBlocks");
-    const data = await res.json();
-    return { props: { data: Array.isArray(data) ? data : [] } };
+    const dbConnect = require("./api/db.js").default;
+    const mongoose = require("mongoose");
+    const BlockSchema = new mongoose.Schema({
+      Height: Number,
+      BlockSize: String,
+      TxCount: Number,
+      Transactions: Array,
+      blockHeader: Object
+    });
+    const Block = mongoose.models.Block || mongoose.model("Block", BlockSchema);
+    await dbConnect();
+    const data = await Block.find().sort({ Height: -1 }).limit(20);
+    return { props: { data: JSON.parse(JSON.stringify(data)) } };
   } catch (error) {
-    console.error("SSR Fetch Error:", error);
+    console.error("SSR Database Error:", error);
     return { props: { data: [] } };
   }
 }
