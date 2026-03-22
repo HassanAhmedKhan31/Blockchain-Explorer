@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-200 antialiased;
+  }
+}
+
+/* Custom glow effect for cards */
+.glow-card {
+  position: relative;
+}
+.glow-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(to right, #0ea5e9, #10b981);
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0.1;
+  transition: opacity 0.3s;
+}
+.glow-card:hover::after {
+  opacity: 0.4;
+}
+ 
+@layer base {
+  body {
+    /* This forces the background to be the dark slate color instead of white */
+    @apply bg-slate-950 text-slate-200 min-h-screen;
+  }
+}
+
+body {
+  background-color: #020617; /* This is Slate-950 */
+  color: white;
+}
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+body {
+  @apply bg-slate-950 text-slate-200;
+  margin: 0;
+  font-family: 'Inter', sans-serif; /* Or any clean font you have installed */
+}
+
