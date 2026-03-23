@@ -8,10 +8,17 @@ export default function SendBTC() {
   const [publicAddress, setPublicAddress] = useState("");
   const [balance, setBalance] = useState(0);
   const [loadingBalance, setLoadingBalance] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const privateKey = useRef("");
 
   useEffect(() => {
+    // Handle Responsiveness
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    // Fetch Balance logic
     const fetchBalance = async () => {
       if (publicAddress && publicAddress !== "Invalid Private Key") {
         setLoadingBalance(true);
@@ -29,6 +36,8 @@ export default function SendBTC() {
       }
     };
     fetchBalance();
+
+    return () => window.removeEventListener("resize", handleResize);
   }, [publicAddress]);
 
   const generateAddress = (e) => {
@@ -48,10 +57,10 @@ export default function SendBTC() {
     }
   };
 
-  const resetValue = (e) => {
-    if (e.target.toAddress) e.target.toAddress.value = "";
-    if (e.target.Amount) e.target.Amount.value = "";
-    if (e.target.priv) e.target.priv.value = "";
+  const resetValue = (form) => {
+    form.toAddress.value = "";
+    form.Amount.value = "";
+    form.priv.value = "";
     setPublicAddress("");
     setBalance(0);
     privateKey.current = "";
@@ -59,17 +68,21 @@ export default function SendBTC() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const amountInSatoshis = parseFloat(e.target.Amount.value) * COIN;
+    const form = e.target;
+    const amountInSatoshis = parseFloat(form.Amount.value) * COIN;
+    
     if (amountInSatoshis / COIN > balance) {
       alert("Insufficient balance!");
       return;
     }
+    
     const data = {
-      priv: e.target.priv.value,
+      priv: form.priv.value,
       fromAddress: publicAddress,
-      toAddress: e.target.toAddress.value,
+      toAddress: form.toAddress.value,
       Amount: amountInSatoshis,
     };
+
     try {
       const response = await fetch("/api/unspentTx", {
         method: "POST",
@@ -82,7 +95,7 @@ export default function SendBTC() {
         socket.on("connect", () => {
           socket.emit("ADD_TX_IN_MEMPOOL", result.data);
           setIsSubmitted(true);
-          resetValue(e);
+          resetValue(form);
           setTimeout(() => {
             socket.disconnect();
             setIsSubmitted(false);
@@ -96,12 +109,13 @@ export default function SendBTC() {
     }
   };
 
+  // Shared Styles with Responsive Adjustments
   const inputStyle = {
     width: '100%',
     backgroundColor: '#020617',
     border: '1px solid #1e293b',
     borderRadius: '16px',
-    height: '65px',
+    height: isMobile ? '55px' : '65px',
     color: 'white',
     paddingLeft: '20px',
     fontSize: '14px',
@@ -121,22 +135,48 @@ export default function SendBTC() {
   };
 
   return (
-    <div style={{ backgroundColor: '#020617', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '120px 20px' }}>
+    <div style={{ 
+      backgroundColor: '#020617', 
+      minHeight: '100vh', 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      padding: isMobile ? '100px 15px 40px 15px' : '120px 20px',
+      overflowX: 'hidden'
+    }}>
       
       {/* Glow Effects */}
-      <div style={{ position: 'absolute', width: '500px', height: '500px', backgroundColor: 'rgba(14, 165, 233, 0.05)', filter: 'blur(120px)', borderRadius: '50%' }}></div>
+      <div style={{ 
+        position: 'absolute', 
+        width: isMobile ? '300px' : '500px', 
+        height: isMobile ? '300px' : '500px', 
+        backgroundColor: 'rgba(14, 165, 233, 0.05)', 
+        filter: 'blur(120px)', 
+        borderRadius: '50%' 
+      }}></div>
 
-      <div style={{ maxWidth: '550px', width: '100%', backgroundColor: 'rgba(15, 23, 42, 0.7)', border: '1px solid #1e293b', borderRadius: '40px', padding: '40px', backdropFilter: 'blur(20px)', position: 'relative', zIndex: 10, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+      <div style={{ 
+        maxWidth: '550px', 
+        width: '100%', 
+        backgroundColor: 'rgba(15, 23, 42, 0.7)', 
+        border: '1px solid #1e293b', 
+        borderRadius: isMobile ? '30px' : '40px', 
+        padding: isMobile ? '25px' : '40px', 
+        backdropFilter: 'blur(20px)', 
+        position: 'relative', 
+        zIndex: 10, 
+        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' 
+      }}>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '45px' }}>
-          <div style={{ width: '3px', height: '35px', backgroundColor: '#0ea5e9', borderRadius: '10px', boxShadow: '0 0 15px #0ea5e9' }}></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: isMobile ? '30px' : '45px' }}>
+          <div style={{ width: '3px', height: isMobile ? '25px' : '35px', backgroundColor: '#0ea5e9', borderRadius: '10px', boxShadow: '0 0 15px #0ea5e9' }}></div>
           <div>
-            <h1 style={{ color: 'white', fontSize: '28px', fontWeight: '900', margin: 0, letterSpacing: '-1px' }}>Transfer Assets</h1>
-            <p style={{ color: '#64748b', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', margin: 0, marginTop: '4px' }}>Bitcoin Mainnet Network</p>
+            <h1 style={{ color: 'white', fontSize: isMobile ? '22px' : '28px', fontWeight: '900', margin: 0, letterSpacing: '-1px' }}>Transfer Assets</h1>
+            <p style={{ color: '#64748b', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', margin: 0, marginTop: '4px' }}>Bitcoin Mainnet Network</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '20px' : '30px' }}>
           
           <div>
             <label style={labelStyle}>Private Key (Hex)</label>
@@ -154,16 +194,36 @@ export default function SendBTC() {
             <div style={{ animation: 'fadeIn 0.5s ease-in-out' }}>
               <div style={{ marginBottom: '25px' }}>
                 <label style={labelStyle}>Sender Address</label>
-                <div style={{ backgroundColor: '#020617', padding: '15px', borderRadius: '12px', fontSize: '12px', color: '#94a3b8', border: '1px solid #1e293b', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                <div style={{ 
+                  backgroundColor: '#020617', 
+                  padding: '15px', 
+                  borderRadius: '12px', 
+                  fontSize: isMobile ? '10px' : '12px', 
+                  color: '#94a3b8', 
+                  border: '1px solid #1e293b', 
+                  fontFamily: 'monospace', 
+                  wordBreak: 'break-all',
+                  lineHeight: '1.4'
+                }}>
                   {publicAddress}
                 </div>
               </div>
 
-              <div style={{ padding: '25px', background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), transparent)', border: '1px solid rgba(14, 165, 233, 0.2)', borderRadius: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ 
+                padding: isMobile ? '20px' : '25px', 
+                background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), transparent)', 
+                border: '1px solid rgba(14, 165, 233, 0.2)', 
+                borderRadius: '24px', 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row',
+                justifyContent: 'space-between', 
+                alignItems: isMobile ? 'flex-start' : 'center',
+                gap: isMobile ? '10px' : '0'
+              }}>
                 <div>
-                  <p style={{ ...labelStyle, color: '#0ea5e9', marginLeft: 0 }}>Available Balance</p>
-                  <p style={{ color: 'white', fontSize: '32px', fontWeight: '900', margin: 0 }}>
-                    {loadingBalance ? "..." : balance.toFixed(8)} <span style={{ fontSize: '16px', color: '#0ea5e9' }}>BTC</span>
+                  <p style={{ ...labelStyle, color: '#0ea5e9', marginLeft: 0, marginBottom: '5px' }}>Available Balance</p>
+                  <p style={{ color: 'white', fontSize: isMobile ? '24px' : '32px', fontWeight: '900', margin: 0 }}>
+                    {loadingBalance ? "..." : balance.toFixed(8)} <span style={{ fontSize: '14px', color: '#0ea5e9' }}>BTC</span>
                   </p>
                 </div>
               </div>
@@ -179,12 +239,12 @@ export default function SendBTC() {
             <label style={labelStyle}>Amount to Send</label>
             <div style={{ position: 'relative' }}>
               <input style={{...inputStyle, fontWeight: 'bold'}} type="number" step="any" name="Amount" placeholder="0.00" required />
-              <span style={{ position: 'absolute', right: '20px', top: '22px', color: '#475569', fontWeight: '900', fontSize: '12px' }}>BTC</span>
+              <span style={{ position: 'absolute', right: '20px', top: isMobile ? '18px' : '22px', color: '#475569', fontWeight: '900', fontSize: '12px' }}>BTC</span>
             </div>
           </div>
 
           {isSubmitted && (
-            <div style={{ padding: '15px', backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '12px', color: '#10b981', textAlign: 'center', fontWeight: 'bold', fontSize: '13px' }}>
+            <div style={{ padding: '15px', backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '12px', color: '#10b981', textAlign: 'center', fontWeight: 'bold', fontSize: '12px' }}>
               ✓ Broadcast Successful: Check Mempool
             </div>
           )}
@@ -193,11 +253,11 @@ export default function SendBTC() {
             type="submit" 
             disabled={!publicAddress || publicAddress === "Invalid Private Key" || loadingBalance}
             style={{
-              height: '65px',
+              height: isMobile ? '55px' : '65px',
               backgroundColor: '#0ea5e9',
               color: 'white',
               border: 'none',
-              borderRadius: '20px',
+              borderRadius: '16px',
               fontWeight: '900',
               fontSize: '14px',
               letterSpacing: '0.1em',
