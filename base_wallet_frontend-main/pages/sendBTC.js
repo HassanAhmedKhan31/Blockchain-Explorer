@@ -13,8 +13,8 @@ export default function SendBTC() {
   const privateKey = useRef("");
 
   useEffect(() => {
-    // Handle Responsiveness
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    // Handle Responsiveness sync with Navbar breakpoint
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
     window.addEventListener("resize", handleResize);
 
@@ -109,7 +109,6 @@ export default function SendBTC() {
     }
   };
 
-  // Shared Styles with Responsive Adjustments
   const inputStyle = {
     width: '100%',
     backgroundColor: '#020617',
@@ -139,10 +138,16 @@ export default function SendBTC() {
       backgroundColor: '#020617', 
       minHeight: '100vh', 
       display: 'flex', 
-      justifyContent: 'center', 
+      flexDirection: 'column', // Changed to column to allow padding-top to work correctly
+      justifyContent: isMobile ? 'flex-start' : 'center', 
       alignItems: 'center', 
-      padding: isMobile ? '100px 15px 40px 15px' : '120px 20px',
-      overflowX: 'hidden'
+      // FIX: Standardized clearance for mobile vs PC
+      paddingTop: isMobile ? '220px' : '140px', 
+      paddingLeft: '20px',
+      paddingRight: '20px',
+      paddingBottom: '80px',
+      overflowX: 'hidden',
+      position: 'relative'
     }}>
       
       {/* Glow Effects */}
@@ -152,7 +157,8 @@ export default function SendBTC() {
         height: isMobile ? '300px' : '500px', 
         backgroundColor: 'rgba(14, 165, 233, 0.05)', 
         filter: 'blur(120px)', 
-        borderRadius: '50%' 
+        borderRadius: '50%',
+        zIndex: 1
       }}></div>
 
       <div style={{ 
