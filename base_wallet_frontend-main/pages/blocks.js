@@ -11,7 +11,8 @@ export default function Blocks({ data }) {
   const isLoading = useRef(false);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    // Sync with Navbar breakpoint
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -83,7 +84,7 @@ export default function Blocks({ data }) {
 
   // Responsive Grid Logic
   const gridTemplate = isMobile 
-    ? "70px 1fr 60px" 
+    ? "75px 1fr 70px" 
     : "1fr 3fr 1fr 1fr"; 
 
   return (
@@ -91,11 +92,11 @@ export default function Blocks({ data }) {
       backgroundColor: '#020617', 
       minHeight: '100vh', 
       color: 'white', 
-      // FIX: Responsive Padding to clear the Fixed Navbar
-      paddingTop: isMobile ? '180px' : '130px', 
+      // FIX: Clearance for the fixed stacked navbar
+      paddingTop: isMobile ? '220px' : '120px', 
       paddingLeft: isMobile ? '15px' : '5%',
       paddingRight: isMobile ? '15px' : '5%',
-      paddingBottom: '50px',
+      paddingBottom: '80px',
       fontFamily: 'sans-serif', 
       overflowX: 'hidden'
     }}>
@@ -121,7 +122,7 @@ export default function Blocks({ data }) {
           display: 'grid', 
           gridTemplateColumns: gridTemplate, 
           backgroundColor: 'rgba(30, 41, 59, 0.8)', 
-          padding: isMobile ? '15px' : '20px',
+          padding: isMobile ? '12px 15px' : '20px',
           borderBottom: '1px solid #334155', 
           color: '#94a3b8', 
           fontSize: '10px', 
@@ -146,7 +147,7 @@ export default function Blocks({ data }) {
                 style={{ 
                   display: 'grid', 
                   gridTemplateColumns: gridTemplate, 
-                  padding: isMobile ? '18px 15px' : '24px 20px', 
+                  padding: isMobile ? '15px' : '24px 20px', 
                   borderBottom: '1px solid #1e293b',
                   alignItems: 'center', 
                   gap: '10px'
@@ -155,7 +156,7 @@ export default function Blocks({ data }) {
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {/* Height */}
-                <div style={{ color: '#38bdf8', fontWeight: '900', fontSize: isMobile ? '0.85rem' : '1.1rem' }}>
+                <div style={{ color: '#38bdf8', fontWeight: '900', fontSize: isMobile ? '0.8rem' : '1.1rem' }}>
                   #{block.Height}
                 </div>
 
@@ -172,7 +173,7 @@ export default function Blocks({ data }) {
                   </Link>
                 </div>
 
-                {/* Transactions (Hidden on small mobile) */}
+                {/* Transactions (Desktop Only) */}
                 {!isMobile && (
                   <div style={{ textAlign: 'center' }}>
                     <span style={{ 
@@ -185,7 +186,7 @@ export default function Blocks({ data }) {
                 )}
 
                 {/* Size */}
-                <div style={{ textAlign: 'right', color: '#94a3b8', fontWeight: 'bold', fontFamily: 'monospace', fontSize: isMobile ? '0.75rem' : '1rem' }}>
+                <div style={{ textAlign: 'right', color: '#94a3b8', fontWeight: 'bold', fontFamily: 'monospace', fontSize: isMobile ? '0.7rem' : '1rem' }}>
                   {block.BlockSize}
                 </div>
               </div>
@@ -196,5 +197,3 @@ export default function Blocks({ data }) {
     </div>
   );
 }
-
-// ... getServerSideProps remains exactly the same as before
