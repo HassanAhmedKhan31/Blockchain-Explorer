@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize(); // Initial check
+    handleResize(); 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -18,8 +18,10 @@ export default function Home() {
       minHeight: '100vh', 
       backgroundColor: '#020617', 
       color: 'white', 
-      overflowX: 'hidden', // Prevent horizontal scroll
-      fontFamily: 'sans-serif' 
+      overflowX: 'hidden',
+      fontFamily: 'sans-serif',
+      // FIX: Added responsive padding to clear the fixed navbar
+      paddingTop: isMobile ? '160px' : '100px' 
     }}>
       <Head>
         <title>ChainExplorer | Professional Analytics</title>
@@ -36,7 +38,8 @@ export default function Home() {
         zIndex: 10, 
         maxWidth: '1200px', 
         margin: '0 auto', 
-        padding: isMobile ? '120px 20px 50px 20px' : '180px 40px 100px 40px' 
+        // FIX: Reduced main padding since parent div handles the top gap
+        padding: isMobile ? '20px 20px 50px 20px' : '60px 40px 100px 40px' 
       }}>
         
         <div style={{ maxWidth: '900px', textAlign: isMobile ? 'center' : 'left' }}>
@@ -52,7 +55,7 @@ export default function Home() {
             Live Blockchain Data
           </div>
           
-          {/* Heading - Clamp makes text fluid between 2.5rem and 5rem */}
+          {/* Heading */}
           <h1 style={{ 
             fontSize: 'clamp(2.5rem, 9vw, 5rem)', 
             fontWeight: '900', 
@@ -115,7 +118,6 @@ export default function Home() {
         <div style={{ 
           marginTop: isMobile ? '60px' : '100px', 
           display: 'grid', 
-          // repeat(auto-fit) handles the responsiveness automatically
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
           gap: '24px' 
         }}>
