@@ -76,21 +76,28 @@ export default function Blocks({ data }) {
   }, [pageNumber]);
 
   useEffect(() => {
-    const interval = setInterval(() => loadLatestBlocks(), 10000); // 10s check
+    const interval = setInterval(() => loadLatestBlocks(), 10000); 
     return () => clearInterval(interval);
   }, []);
   // --- KEEPING YOUR LOGIC END ---
 
   // Responsive Grid Logic
   const gridTemplate = isMobile 
-    ? "80px 1fr 60px" // Height, Hash, Size (Hide TX count on tiny screens)
-    : "1fr 3fr 1fr 1fr"; // Full Desktop View
+    ? "70px 1fr 60px" 
+    : "1fr 3fr 1fr 1fr"; 
 
   return (
     <div style={{ 
-      backgroundColor: '#020617', minHeight: '100vh', color: 'white', 
-      padding: isMobile ? '100px 15px 50px 15px' : '150px 5% 50px 5%', 
-      fontFamily: 'sans-serif', overflowX: 'hidden'
+      backgroundColor: '#020617', 
+      minHeight: '100vh', 
+      color: 'white', 
+      // FIX: Responsive Padding to clear the Fixed Navbar
+      paddingTop: isMobile ? '180px' : '130px', 
+      paddingLeft: isMobile ? '15px' : '5%',
+      paddingRight: isMobile ? '15px' : '5%',
+      paddingBottom: '50px',
+      fontFamily: 'sans-serif', 
+      overflowX: 'hidden'
     }}>
       
       {/* Page Header */}
@@ -101,17 +108,26 @@ export default function Blocks({ data }) {
 
       {/* Table Container */}
       <div style={{ 
-        backgroundColor: 'rgba(15, 23, 42, 0.4)', borderRadius: isMobile ? '16px' : '24px', 
-        border: '1px solid #1e293b', overflow: 'hidden', backdropFilter: 'blur(10px)',
+        backgroundColor: 'rgba(15, 23, 42, 0.4)', 
+        borderRadius: isMobile ? '16px' : '24px', 
+        border: '1px solid #1e293b', 
+        overflow: 'hidden', 
+        backdropFilter: 'blur(10px)',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
       }}>
         
         {/* Table Header Row */}
         <div style={{ 
-          display: 'grid', gridTemplateColumns: gridTemplate, 
-          backgroundColor: 'rgba(30, 41, 59, 0.8)', padding: isMobile ? '15px' : '20px',
-          borderBottom: '1px solid #334155', color: '#94a3b8', 
-          fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em'
+          display: 'grid', 
+          gridTemplateColumns: gridTemplate, 
+          backgroundColor: 'rgba(30, 41, 59, 0.8)', 
+          padding: isMobile ? '15px' : '20px',
+          borderBottom: '1px solid #334155', 
+          color: '#94a3b8', 
+          fontSize: '10px', 
+          fontWeight: '900', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.1em'
         }}>
           <div style={{ textAlign: isMobile ? 'left' : 'center' }}>Height</div>
           <div style={{ paddingLeft: isMobile ? '10px' : '20px' }}>Hash</div>
@@ -120,7 +136,7 @@ export default function Blocks({ data }) {
         </div>
 
         {/* Table Body */}
-        <div style={{ overflowX: 'auto' }}>
+        <div>
           {blocks.map((block, index) => {
             const isLast = blocks.length === index + 1;
             return (
@@ -128,15 +144,18 @@ export default function Blocks({ data }) {
                 ref={isLast ? lastBlockRef : null}
                 key={block.blockHeader.blockhash}
                 style={{ 
-                  display: 'grid', gridTemplateColumns: gridTemplate, 
-                  padding: isMobile ? '18px 15px' : '24px 20px', borderBottom: '1px solid #1e293b',
-                  alignItems: 'center', gap: '10px'
+                  display: 'grid', 
+                  gridTemplateColumns: gridTemplate, 
+                  padding: isMobile ? '18px 15px' : '24px 20px', 
+                  borderBottom: '1px solid #1e293b',
+                  alignItems: 'center', 
+                  gap: '10px'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.03)'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.05)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {/* Height */}
-                <div style={{ color: '#38bdf8', fontWeight: '900', fontSize: isMobile ? '0.9rem' : '1.1rem' }}>
+                <div style={{ color: '#38bdf8', fontWeight: '900', fontSize: isMobile ? '0.85rem' : '1.1rem' }}>
                   #{block.Height}
                 </div>
 
@@ -145,7 +164,7 @@ export default function Blocks({ data }) {
                   <Link href={`/blocks/block?blockhash=${block.blockHeader.blockhash}`} passHref>
                     <a style={{ 
                       color: '#e2e8f0', textDecoration: 'none', 
-                      fontFamily: 'monospace', fontSize: isMobile ? '0.75rem' : '0.9rem', display: 'block',
+                      fontFamily: 'monospace', fontSize: isMobile ? '0.7rem' : '0.9rem', display: 'block',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
                     }}>
                       {block.blockHeader.blockhash}
@@ -158,7 +177,7 @@ export default function Blocks({ data }) {
                   <div style={{ textAlign: 'center' }}>
                     <span style={{ 
                       backgroundColor: 'rgba(56, 189, 248, 0.1)', padding: '6px 14px', borderRadius: '20px',
-                      fontSize: '12px', fontWeight: 'bold', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.2)'
+                      fontSize: '11px', fontWeight: 'bold', color: '#7dd3fc', border: '1px solid rgba(56, 189, 248, 0.2)'
                     }}>
                       {block.Transactions ? block.Transactions.length : block.TxCount} TXs
                     </span>
@@ -166,7 +185,7 @@ export default function Blocks({ data }) {
                 )}
 
                 {/* Size */}
-                <div style={{ textAlign: 'right', color: '#94a3b8', fontWeight: 'bold', fontFamily: 'monospace', fontSize: isMobile ? '0.8rem' : '1rem' }}>
+                <div style={{ textAlign: 'right', color: '#94a3b8', fontWeight: 'bold', fontFamily: 'monospace', fontSize: isMobile ? '0.75rem' : '1rem' }}>
                   {block.BlockSize}
                 </div>
               </div>
@@ -178,4 +197,4 @@ export default function Blocks({ data }) {
   );
 }
 
-// ... getServerSideProps remains the same
+// ... getServerSideProps remains exactly the same as before
