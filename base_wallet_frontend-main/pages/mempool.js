@@ -9,8 +9,8 @@ export default function Mempool() {
   const COIN = 100000000;
 
   useEffect(() => {
-    // Handle Responsiveness
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    // Sync with the same 1024px breakpoint as the Navbar
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
     window.addEventListener("resize", handleResize);
 
@@ -36,8 +36,8 @@ export default function Mempool() {
       backgroundColor: '#020617', 
       minHeight: '100vh', 
       color: 'white', 
-      // FIX: Responsive Padding to clear the Fixed Navbar
-      paddingTop: isMobile ? '180px' : '130px', 
+      // FIX: Clearance for the fixed stacked navbar
+      paddingTop: isMobile ? '220px' : '130px', 
       paddingLeft: isMobile ? '15px' : '5%',
       paddingRight: isMobile ? '15px' : '5%',
       paddingBottom: '50px',
@@ -56,7 +56,7 @@ export default function Mempool() {
       <main style={{ position: 'relative', zIndex: 10, maxWidth: '1000px', margin: '0 auto' }}>
         
         {/* Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: isMobile ? '30px' : '60px' }}>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '60px' }}>
           <div style={{ 
             display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px', marginBottom: '15px',
             border: '1px solid rgba(168, 85, 247, 0.3)', backgroundColor: 'rgba(168, 85, 247, 0.1)',
