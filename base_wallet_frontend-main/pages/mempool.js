@@ -33,9 +33,17 @@ export default function Mempool() {
 
   return (
     <div style={{ 
-      backgroundColor: '#020617', minHeight: '100vh', color: 'white', 
-      padding: isMobile ? '100px 15px' : '150px 5%', 
-      fontFamily: 'sans-serif', position: 'relative', overflowX: 'hidden'
+      backgroundColor: '#020617', 
+      minHeight: '100vh', 
+      color: 'white', 
+      // FIX: Responsive Padding to clear the Fixed Navbar
+      paddingTop: isMobile ? '180px' : '130px', 
+      paddingLeft: isMobile ? '15px' : '5%',
+      paddingRight: isMobile ? '15px' : '5%',
+      paddingBottom: '50px',
+      fontFamily: 'sans-serif', 
+      position: 'relative', 
+      overflowX: 'hidden'
     }}>
       
       {/* Background Glow */}
@@ -119,6 +127,8 @@ export default function Mempool() {
                       borderBottom: '1px solid #1e293b', alignItems: 'center',
                       gap: '10px'
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(168, 85, 247, 0.05)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <Link
                       href={{
