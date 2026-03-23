@@ -6,7 +6,7 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize(); 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -20,8 +20,8 @@ export default function Home() {
       color: 'white', 
       overflowX: 'hidden',
       fontFamily: 'sans-serif',
-      // FIX: Added responsive padding to clear the fixed navbar
-      paddingTop: isMobile ? '160px' : '100px' 
+      // FIX: Increased padding to clear the stacked mobile navbar
+      paddingTop: isMobile ? '220px' : '120px' 
     }}>
       <Head>
         <title>ChainExplorer | Professional Analytics</title>
@@ -38,8 +38,8 @@ export default function Home() {
         zIndex: 10, 
         maxWidth: '1200px', 
         margin: '0 auto', 
-        // FIX: Reduced main padding since parent div handles the top gap
-        padding: isMobile ? '20px 20px 50px 20px' : '60px 40px 100px 40px' 
+        // FIX: Removed large internal padding to avoid double-spacing
+        padding: '0 25px 100px 25px' 
       }}>
         
         <div style={{ maxWidth: '900px', textAlign: isMobile ? 'center' : 'left' }}>
